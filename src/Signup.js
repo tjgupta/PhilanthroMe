@@ -6,32 +6,37 @@ class Signup extends Component {
     super(props);
     this.state = {
       email: '',
-      password: ''
+      password: '',
+      error: false
     };
-    this.handleEmailChange = this.handleEmailChange.bind(this);
-    this.handlePasswordChange = this.handlePasswordChange.bind(this);
+    this.db = firebase.firestore();
+    this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
-  handleEmailChange(event) {
-    this.setState({email: event.target.value});
-  }
-
-  handlePasswordChange(event) {
-    this.setState({password: event.target.value});
+  handleChange(event) {
+    const target = event.target;
+    const name = target.name;
+    this.setState({
+      [name]: target.value
+    });
   }
 
   handleSubmit(event) {
     event.preventDefault();
     const email = this.state.email;
     const password = this.state.password;
+    const username = this.state.username;
+    this.setState({error: false});
     firebase.auth().createUserWithEmailAndPassword(email, password)
       .then((resp) => {
+        return this.db.collection('users').doc(resp.uid).set({
+          uid: resp.uid,
+          favoriteCharity: ''
+        });
       })
-      .catch(function(error) {
-        var errorCode = error.code;
-        var errorMessage = error.message;
-        console.log(error);
+      .catch(() => {
+        this.setState({error: true});
       });
   }
 
@@ -40,18 +45,28 @@ class Signup extends Component {
       <div>
         <h2>Sign up</h2>
         <form onSubmit={this.handleSubmit}>
-          <label htmlFor="email">Email</label>
-          <input
-            type="email"
-            id="email"
-            value={this.state.email}
-            onChange={this.handleEmailChange} />
-          <label htmlFor="password">Password</label>
-          <input
-            type="password"
-            id="password"
-            value={this.state.password}
-            onChange={this.handlePasswordChange} />
+        {this.state.error ?
+          <div className="error-message">
+            An error has occurred. Please try again later.
+          </div> : null}
+          <div className="form-group">
+            <label htmlFor="email">Email</label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              value={this.state.email}
+              onChange={this.handleChange} />
+          </div>
+          <div className="form-group">
+            <label htmlFor="password">Password</label>
+            <input
+              type="password"
+              id="password"
+              name="password"
+              value={this.state.password}
+              onChange={this.handleChange} />
+          </div>
           <button type="submit">Sign up</button>
         </form>
       </div>

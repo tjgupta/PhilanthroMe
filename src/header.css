@@ -1,0 +1,27 @@
+.Header-header {
+  background-color: #222;
+  padding: 20px;
+  color: white;
+  display: flex;
+  justify-content: space-between;
+}
+
+.Header-title {
+  font-size: 1.5em;
+}
+
+.Header-title a {
+  color: white;
+  text-decoration: none;
+}
+
+.Header-nav li {
+  list-style: none;
+  float: left;
+  margin-left: 20px;
+  padding: 0;
+}
+
+.Header-nav a {
+  color: white;
+}

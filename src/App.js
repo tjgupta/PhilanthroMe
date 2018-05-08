@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Switch, Route, withRouter } from 'react-router-dom';
+import { Switch, Route, withRouter, Redirect } from 'react-router-dom';
 import Header from './Header';
 import Home from './Home';
 import Login from './Login';
@@ -8,6 +8,7 @@ import Me from './Me';
 import './App.css';
 import firebase from 'firebase/app';
 require('firebase/auth');
+require('firebase/firestore');
 
 class App extends Component {
   constructor(props) {
@@ -29,6 +30,9 @@ class App extends Component {
       messagingSenderId: "634623017252"
     };
     firebase.initializeApp(firebaseConfig);
+    const firestore = firebase.firestore();
+    const settings = {timestampsInSnapshots: true};
+    firestore.settings(settings);
     firebase.auth().onAuthStateChanged((user) => {
       if (user) {
         self.setState({user: user});
@@ -49,7 +53,9 @@ class App extends Component {
             <Route exact path="/" component={Home} />
             <Route path="/login" component={Login} />
             <Route path="/signup" component={Signup} />
-            <Route path="/me" component={Me} />
+            <Route path="/me" render={() => (
+              this.state.user ? <Me /> : <Redirect to="/" />
+            )} />
           </Switch>
         </div>
       </div>

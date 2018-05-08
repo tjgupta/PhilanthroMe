@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Link, Switch, Route } from 'react-router-dom';
 import firebase from 'firebase/app';
+import './header.css';
 
 class Header extends Component {
   constructor(props) {
@@ -19,6 +20,7 @@ class Header extends Component {
   render() {
     const appNav = this.props.user ? (
       <ul className="App-nav">
+        <li><Link to="/me">My Profile</Link></li>
         <li><a href="#" onClick={this.logout}>Log out</a></li>
       </ul>
     ) : (
@@ -35,11 +37,11 @@ class Header extends Component {
     );
 
     return (
-      <header className="App-header">
-        <h1 className="App-title">
+      <header className="Header-header">
+        <h1 className="Header-title">
           <Link to="/">PhilanthroMe</Link>
         </h1>
-        <ul className="App-nav">
+        <ul className="Header-nav">
           {appNav}
         </ul>
       </header>

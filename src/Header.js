@@ -16,7 +16,7 @@ class Header extends Component {
   render() {
     const appNav = this.props.user ? (
       <ul className="App-nav">
-        <li><Link to="/me">My Profile</Link></li>
+        <li><Link to="/settings">Settings</Link></li>
         <li><a href="#" onClick={this.logout}>Log out</a></li>
       </ul>
     ) : (

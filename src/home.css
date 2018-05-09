@@ -14,6 +14,11 @@
   text-align: center;
 }
 
+.Home-feed a {
+  color: #333333;
+  text-decoration: none;
+}
+
 .Home-feed .avatar {
   width: 60px;
 }

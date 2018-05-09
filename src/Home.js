@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 import firebase from 'firebase/app';
 import './home.css';
 import avatar from './avatar.png';
@@ -20,9 +21,9 @@ class Home extends Component {
         let data = [];
         querySnapshot.forEach((user) => {
           data.push(user.data());
-        })
+        });
         this.setState({latestUsers: data});
-      })
+      });
 
     db.collection('users')
       .onSnapshot((querySnapshot) => {
@@ -47,20 +48,22 @@ class Home extends Component {
             const userName = user.displayName ? user.displayName : 'Anonymous'
             return (
               <li key={user.uid}>
-                <img src={avatar} className="avatar" alt={userName} />
-                <span className="Home-feed-name">
-                  {userName}
-                </span>
-                <span className="Home-feed-favorite-charity">
-                  Favorite charity:<br />
-                  {user.favoriteCharity ? user.favoriteCharity : 'Unknown'}
-                </span>
+                <Link to={`/u/${user.username}`}>
+                  <img src={avatar} className="avatar" alt={userName} />
+                  <span className="Home-feed-name">
+                    {userName}
+                  </span>
+                  <span className="Home-feed-favorite-charity">
+                    Favorite charity:<br />
+                    {user.favoriteCharity ? user.favoriteCharity : 'Unknown'}
+                  </span>
+                </Link>
               </li>
             )
           })}
         </ul>
       </div>
-    )
+    );
   }
 }
 

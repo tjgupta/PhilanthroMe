@@ -1,31 +1,35 @@
 import React, { Component } from 'react';
 import firebase from 'firebase/app';
 
-class Me extends Component {
+class Settings extends Component {
   constructor(props) {
     super(props);
     this.state = {
       displayName: '',
       favoriteCharity: '',
+      username: '',
       loading: false,
-      error: false,
-      success: false
+      error: false
     };
     this.db = firebase.firestore();
-    this.user = firebase.auth().currentUser;
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
   componentDidMount() {
-    this.db.collection('users').doc(this.user.uid).get()
-      .then((doc) => {
-        const data = doc.data();
-        this.setState({
-          displayName: data.displayName || '',
-          favoriteCharity: data.favoriteCharity || ''
+    firebase.auth().onAuthStateChanged((user) => {
+      this.user = user;
+      this.db.collection('users').doc(this.user.uid).get()
+        .then((doc) => {
+          const data = doc.data();
+          this.setState({
+            displayName: data.displayName || '',
+            favoriteCharity: data.favoriteCharity || '',
+            username: data.username
+          });
         });
-      });
+
+    });
   }
 
   handleChange(event) {
@@ -38,34 +42,27 @@ class Me extends Component {
 
   handleSubmit(event) {
     event.preventDefault();
-    this.setState({loading: true, error: false, success: false});
+    this.setState({loading: true, error: false});
+    const self = this;
     this.db.collection('users').doc(this.user.uid).set({
       displayName: this.state.displayName,
-      favoriteCharity: this.state.favoriteCharity,
-      uid: this.user.uid
-    })
+      favoriteCharity: this.state.favoriteCharity
+    }, {merge: true})
     .then(() => {
-      this.setState({success: true})
+      self.props.history.push(`/u/${self.state.username}`);
     })
     .catch((error) => {
-      this.setState({error: true});
-    })
-    .finally(() => {
-      this.setState({loading: false})
+      self.setState({error: true, loading: false});
     });
   }
 
   render() {
     return (
       <form onSubmit={this.handleSubmit}>
-        <h2>My Profile</h2>
+        <h2>Settings</h2>
         {this.state.error ?
           <div className="error-message">
             An error has occurred. Please try again later.
-          </div> : null}
-        {this.state.success ?
-          <div className="success-message">
-            Your changes have been saved.
           </div> : null}
         <div className="form-group">
           <label htmlFor="displayName">Name</label>
@@ -91,4 +88,4 @@ class Me extends Component {
   }
 }
 
-export default Me;
+export default Settings;

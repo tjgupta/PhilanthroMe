@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
-import { Switch, Route, withRouter, Redirect } from 'react-router-dom';
+import { Switch, Route, withRouter } from 'react-router-dom';
 import Header from './Header';
 import Home from './Home';
 import Login from './Login';
 import Signup from './Signup';
-import Me from './Me';
+import Profile from './Profile';
+import Settings from './Settings';
 import './App.css';
 import firebase from 'firebase/app';
 require('firebase/auth');
@@ -36,6 +37,12 @@ class App extends Component {
     firebase.auth().onAuthStateChanged((user) => {
       if (user) {
         self.setState({user: user});
+        firestore.collection('users').doc(user.uid).get()
+          .then((doc) => {
+            const data = doc.data();
+            self.props.history.push(`/u/${data.username}`);
+          });
+
       } else {
         self.setState({user: null});
         self.props.history.push('/');
@@ -52,8 +59,8 @@ class App extends Component {
             <Route exact path="/" component={Home} />
             <Route path="/login" component={Login} />
             <Route path="/signup" component={Signup} />
-            <Route path="/me" render={() => (
-              this.state.user ? <Me /> : <Redirect to="/" />
+            <Route path="/u/:username" component={Profile} />
+            <Route path="/settings" component={Settings} />
             )} />
           </Switch>
         </div>

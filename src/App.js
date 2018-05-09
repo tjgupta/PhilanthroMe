@@ -36,7 +36,6 @@ class App extends Component {
     firebase.auth().onAuthStateChanged((user) => {
       if (user) {
         self.setState({user: user});
-        self.props.history.push('/me');
       } else {
         self.setState({user: null});
         self.props.history.push('/');

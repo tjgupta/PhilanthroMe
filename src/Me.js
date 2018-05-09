@@ -41,7 +41,8 @@ class Me extends Component {
     this.setState({loading: true, error: false, success: false});
     this.db.collection('users').doc(this.user.uid).set({
       displayName: this.state.displayName,
-      favoriteCharity: this.state.favoriteCharity
+      favoriteCharity: this.state.favoriteCharity,
+      uid: this.user.uid
     })
     .then(() => {
       this.setState({success: true})

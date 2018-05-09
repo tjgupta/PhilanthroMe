@@ -27,6 +27,9 @@ class Login extends Component {
     const password = this.state.password;
     this.setState({error: false});
     firebase.auth().signInWithEmailAndPassword(email, password)
+      .then(() => {
+        this.props.history.push('/me');
+      })
       .catch(() => {
         this.setState({error: true});
       });

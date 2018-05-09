@@ -1,0 +1,30 @@
+.Home-intro {
+  font-size: large;
+}
+
+.Home-feed {
+  padding: 0;
+}
+
+.Home-feed li {
+  list-style: none;
+  float: left;
+  width: 200px;
+  margin-right: 30px;
+  text-align: center;
+}
+
+.Home-feed .avatar {
+  width: 60px;
+}
+
+.Home-feed-name {
+  display: block;
+  font-weight: bold;
+}
+
+.Home-feed-favorite-charity {
+  display: block;
+  font-weight: lighter;
+  font-size: 0.85em;
+}

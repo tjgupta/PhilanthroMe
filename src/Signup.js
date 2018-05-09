@@ -28,15 +28,20 @@ class Signup extends Component {
     const password = this.state.password;
     const username = this.state.username;
     this.setState({error: false});
+    const self = this;
     firebase.auth().createUserWithEmailAndPassword(email, password)
       .then((resp) => {
-        return this.db.collection('users').doc(resp.uid).set({
+        return self.db.collection('users').doc(resp.uid).set({
           uid: resp.uid,
-          favoriteCharity: ''
+          favoriteCharity: '',
+          displayName: ''
         });
       })
+      .then(() => {
+        self.props.history.push('/me');
+      })
       .catch(() => {
-        this.setState({error: true});
+        self.setState({error: true});
       });
   }
 

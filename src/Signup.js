@@ -26,7 +26,6 @@ class Signup extends Component {
     event.preventDefault();
     const email = this.state.email;
     const password = this.state.password;
-    const username = this.state.username;
     this.setState({error: false});
     const self = this;
     firebase.auth().createUserWithEmailAndPassword(email, password)

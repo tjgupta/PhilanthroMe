@@ -4,10 +4,6 @@ import firebase from 'firebase/app';
 import './header.css';
 
 class Header extends Component {
-  constructor(props) {
-    super(props);
-  }
-
   logout(event) {
     event.preventDefault();
     firebase.auth().signOut()

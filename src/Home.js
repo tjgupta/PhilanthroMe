@@ -44,11 +44,12 @@ class Home extends Component {
         <h3>Welcome to the newest givers on PhilanthroMe</h3>
         <ul className="Home-feed clearfix">
           {this.state.latestUsers.map((user) => {
+            const userName = user.displayName ? user.displayName : 'Anonymous'
             return (
               <li key={user.uid}>
-                <img src={avatar} className="avatar" />
+                <img src={avatar} className="avatar" alt={userName} />
                 <span className="Home-feed-name">
-                  {user.displayName ? user.displayName : 'Anonymous'}
+                  {userName}
                 </span>
                 <span className="Home-feed-favorite-charity">
                   Favorite charity:<br />

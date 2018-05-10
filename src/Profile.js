@@ -17,22 +17,31 @@ class Profile extends Component {
   }
 
   componentDidMount() {
+    const self = this;
     this.db.collection('users')
       .where('username', '==', this.props.match.params.username)
       .get()
       .then((results) => {
         const data = results.docs[0].data();
-        this.setState({
+        self.setState({
           displayName: data.displayName || 'Anonymous',
           favoriteCharity: data.favoriteCharity || 'Unknown',
           uid: data.uid
         });
 
-        firebase.auth().onAuthStateChanged((user) => {
-          this.user = user;
-          this.setState({isLoggedInUser: this.isLoggedInUser()});
+        self.authStateUnsubscribe = firebase.auth().onAuthStateChanged((user) => {
+          self.user = user;
+          self.setState({isLoggedInUser: this.isLoggedInUser()});
         });
       });
+  }
+
+  componentWillUnmount() {
+    // check if the subscription is set, in case it gets unmounted
+    // before the DB call comes back
+    if (this.authStateUnsubscribe) {
+      this.authStateUnsubscribe();
+    }
   }
 
   isLoggedInUser() {

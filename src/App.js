@@ -8,8 +8,6 @@ import Profile from './Profile';
 import Settings from './Settings';
 import './App.css';
 import firebase from 'firebase/app';
-require('firebase/auth');
-require('firebase/firestore');
 
 class App extends Component {
   constructor(props) {
@@ -21,22 +19,10 @@ class App extends Component {
 
     const self = this;
 
-    // Initialize Firebase
-    const firebaseConfig = {
-      apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
-      authDomain: "philanthrome-8bcf4.firebaseapp.com",
-      databaseURL: "https://philanthrome-8bcf4.firebaseio.com",
-      projectId: "philanthrome-8bcf4",
-      storageBucket: "philanthrome-8bcf4.appspot.com",
-      messagingSenderId: "634623017252"
-    };
-    firebase.initializeApp(firebaseConfig);
-    const firestore = firebase.firestore();
-    const settings = {timestampsInSnapshots: true};
-    firestore.settings(settings);
-    firebase.auth().onAuthStateChanged((user) => {
+    this.authStateUnsubscribe = firebase.auth().onAuthStateChanged((user) => {
       if (user) {
         self.setState({user: user});
+        const firestore = firebase.firestore();
         firestore.collection('users').doc(user.uid).get()
           .then((doc) => {
             const data = doc.data();
@@ -50,6 +36,10 @@ class App extends Component {
     });
   }
 
+  componentWillUnmount() {
+    this.authStateUnsubscribe();
+  }
+
   render() {
     return (
       <div className="App">
@@ -61,7 +51,6 @@ class App extends Component {
             <Route path="/signup" component={Signup} />
             <Route path="/u/:username" component={Profile} />
             <Route path="/settings" component={Settings} />
-            )} />
           </Switch>
         </div>
       </div>

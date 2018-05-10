@@ -9,6 +9,7 @@ class Signup extends Component {
       password: '',
       displayName: '',
       username: '',
+      favoriteCharity: '',
       error: false
     };
     this.db = firebase.firestore();
@@ -39,7 +40,8 @@ class Signup extends Component {
           uid: resp.uid,
           displayName: this.state.displayName,
           username: this.state.username,
-          favoriteCharity: this.state.favoriteCharity
+          favoriteCharity: this.state.favoriteCharity,
+          createdAt: firebase.firestore.FieldValue.serverTimestamp()
         });
       })
       .catch(() => {

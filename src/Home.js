@@ -15,6 +15,7 @@ class Home extends Component {
   componentDidMount() {
     const db = firebase.firestore();
     db.collection('users')
+      .orderBy('createdAt', 'desc')
       .limit(10)
       .get()
       .then((querySnapshot) => {
@@ -25,7 +26,7 @@ class Home extends Component {
         this.setState({latestUsers: data});
       });
 
-    db.collection('users')
+    this.querySnapshotUnsubscribe = db.collection('users')
       .onSnapshot((querySnapshot) => {
         let data = [];
         querySnapshot.forEach((user) => {
@@ -33,6 +34,10 @@ class Home extends Component {
         })
         this.setState({latestUsers: data});
       });
+  }
+
+  componentWillUnmount() {
+    this.querySnapshotUnsubscribe();
   }
 
   render() {
